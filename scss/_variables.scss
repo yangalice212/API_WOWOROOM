@@ -1,0 +1,39 @@
+$primary: #6a33f8;
+$check: #6a33ff;
+$other: #797979;
+.d-flex {
+  display: flex;
+}
+.ai-center {
+  align-items: center;
+}
+.jc-between {
+  justify-content: space-between;
+}
+.jc-center {
+  justify-content: center;
+}
+//font
+
+.fs-1 {
+  font-size: 20px !important;
+}
+.fs-2 {
+  font-size: 24px !important;
+}
+.fs-3 {
+  font-size: 28px !important;
+}
+.fs-4 {
+  font-size: 32px !important;
+}
+
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}

@@ -1,0 +1,347 @@
+.wrap {
+  max-width: 1110px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.navbar {
+  border-bottom: 40px solid black;
+  margin-bottom: 30px;
+  position: relative;
+  a {
+    color: black;
+    padding: 28px 8px;
+    &:hover {
+      color: $primary;
+    }
+    @include pad {
+      padding: 10px 0;
+    }
+  }
+  h1 {
+    font-weight: bold;
+  }
+  &-menu {
+    margin-left: auto;
+    flex-wrap: wrap;
+    background: white;
+    li {
+      margin: 0 16px;
+    }
+    @include pad {
+      position: absolute;
+      top: 112px;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      max-height: 0;
+      overflow: hidden;
+      li {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+      }
+      a:hover {
+        background: $primary;
+        color: white;
+        padding: 8px 0;
+      }
+    }
+    &.active {
+      max-height: 300px;
+    }
+  }
+  &-toggle {
+    display: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    @include pad {
+      display: block;
+      margin-left: auto;
+    }
+  }
+}
+.banner {
+  background: url("../img/3ewLAKn.png") no-repeat center center;
+  height: 420px;
+  background-size: cover;
+  align-items: flex-end;
+  margin-bottom: 60px;
+  h2 {
+    color: white;
+    margin: 0 0 48px 52px;
+  }
+  @include pad {
+    height: 210px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    h2 {
+      margin: 0;
+    }
+  }
+}
+.advantage {
+  margin-bottom: 60px;
+  h3 {
+    margin-bottom: 28px;
+  }
+  li:nth-child(1),
+  li:nth-child(2) {
+    margin-right: 15px;
+  }
+}
+.compare {
+  background: #f8f8f8;
+  padding: 60px 0;
+  h3 {
+    margin-bottom: 32px;
+  }
+  .compare-table {
+    max-width: 730px;
+    margin: 0 auto;
+    overflow-x: scroll;
+  }
+  table {
+    width: 730px;
+    font-size: 20px;
+    tr {
+      border-bottom: 1px solid #b9b9b9;
+    }
+    th,
+    td {
+      padding: 12px 0;
+      width: 160px;
+    }
+    tbody th {
+      text-align: left;
+    }
+    .other {
+      color: $other;
+      font-size: 16px;
+    }
+    i {
+      color: $check;
+    }
+  }
+}
+.recommend {
+  background: #301e5f;
+  padding: 60px 0 80px;
+  .wrap {
+    overflow-x: scroll;
+  }
+  h3 {
+    color: white;
+    margin-bottom: 32px;
+  }
+  &-top {
+    margin-left: 95px;
+    margin-bottom: 20px;
+  }
+  li {
+    min-width: 350px;
+    background: white;
+    margin-right: 30px;
+    .recommend-content {
+      padding: 12px 16px;
+      & > div {
+        margin-bottom: 8px;
+      }
+    }
+    .productName {
+      font-size: 14px;
+      color: $primary;
+    }
+    .customer-img {
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+    }
+  }
+}
+.deliver {
+  margin-bottom: 72px;
+  h3 {
+    margin: 32px 0;
+  }
+  li {
+    margin: 0 45px;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 45px;
+      right: -60px;
+      border: 10px solid black;
+      border-top: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+    &:nth-child(4)::after {
+      border: none;
+    }
+  }
+  .deliver-img {
+    width: 115px;
+    height: 115px;
+    border: 3px solid black;
+    border-radius: 50%;
+    margin-bottom: 8px;
+  }
+  ol {
+    flex-wrap: wrap;
+    @include pc {
+      max-width: 500px;
+      margin: 0 auto;
+      li {
+        margin-bottom: 16px;
+        &:nth-child(2)::after {
+          border: none;
+        }
+      }
+    }
+    @include phone {
+      li::after {
+        border: none;
+      }
+    }
+  }
+}
+.product {
+  select {
+    width: 255px;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    color: #818a91;
+    margin-bottom: 32px;
+  }
+  &List {
+    flex-wrap: wrap;
+    li {
+      position: relative;
+      width: 23.5%;
+      margin-bottom: 28px;
+      img {
+        width: 100%;
+      }
+      h5 {
+        position: absolute;
+        right: -5px;
+        top: 10px;
+        background: #000;
+        color: white;
+        padding: 8px 24px;
+      }
+      a {
+        background: #000;
+        color: white;
+        padding: 10px 0;
+        &:hover {
+          background: #301e5f;
+        }
+      }
+      @include pad {
+        width: 48.5%;
+      }
+      @include phone {
+        width: 98.5%;
+      }
+    }
+  }
+}
+.cart {
+  background: #f8f8f8;
+  padding: 48px 0 80px;
+  &-table {
+    max-width: 920px;
+    margin: 0 auto;
+    overflow-x: scroll;
+  }
+  h3 {
+    margin-bottom: 32px;
+  }
+  table {
+    width: 920px;
+    margin: 0 auto;
+    @include pc {
+      width: 800px;
+    }
+    @include pad {
+      width: 680px;
+    }
+  }
+  &List {
+    width: 100%;
+    text-align: left;
+    img {
+      width: 80px;
+      height: 80px;
+      margin-right: 15px;
+    }
+    tbody tr {
+      border-bottom: 1px solid #bfbfbf;
+    }
+    th,
+    td {
+      padding: 15px;
+      vertical-align: middle;
+    }
+    a i {
+      color: black;
+      &:hover {
+        color: $primary;
+        transform: scale(1.2);
+      }
+    }
+    tfoot a {
+      width: 160px;
+      padding: 8px 0;
+      color: black;
+      border: 1px solid black;
+      &:hover {
+        background: black;
+        color: white;
+      }
+    }
+  }
+}
+
+.customerForm {
+  padding: 60px 0 80px;
+  h3 {
+    margin-bottom: 32px;
+  }
+  form {
+    margin: 0 auto;
+    width: 350px;
+    @include phone {
+      width: 300px;
+    }
+  }
+  .form-group {
+    margin-bottom: 20px;
+    input,
+    select {
+      display: block;
+      padding: 8px 12px;
+      margin-top: 6px;
+      width: 100%;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+    }
+  }
+  .sendCustomerFormBtn {
+    border: 0;
+    border-radius: 4px;
+    background: #000;
+    color: white;
+    padding: 10px 68px;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+      background: #301e5f;
+    }
+  }
+}
