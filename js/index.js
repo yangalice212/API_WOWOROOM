@@ -140,11 +140,11 @@ function showCartList() {
             <td>NT$${toThousands(item.product.price)}</td>
             <td>
               <div class="cartNum">
-                <button class="cartBtn minusBtn">-</button>
+                <button class="minusBtn">-</button>
                 <input type="text" value="${
                   item.quantity
                 }" class="cartProductNum">
-                <button class="cartBtn plusBtn">+</button>
+                <button class="plusBtn">+</button>
               </div>
             </td>
             <td class="text-right">NT$${toThousands(
@@ -173,7 +173,6 @@ function showCartList() {
     cartList.innerHTML = str;
     //修改購物車數量
     const cartNum = document.querySelectorAll(".cartNum");
-
     cartEditItem(cartNum);
 
     //刪除單筆購物車
@@ -217,22 +216,36 @@ function cartEditItemInit(id, num) {
     });
 }
 function cartEditItem(arr) {
-  const minusBtn = document.querySelector(".minusBtn");
-  const plusBtn = document.querySelector(".plusBtn");
+  const minusBtn = document.querySelectorAll(".minusBtn");
+  const plusBtn = document.querySelectorAll(".plusBtn");
+  const cartProductNum = document.querySelectorAll(".cartProductNum");
   arr.forEach(function (item, index) {
-    item.addEventListener("click", function (e) {
-      if (e.target.nodeName === "BUTTON") {
+    let num = 0;
+    minusBtn.forEach(function (item, index) {
+      item.addEventListener("click", function (e) {
         console.log(item);
-      }
+      });
     });
-
-    minusBtn.addEventListener("click", function () {});
-    // item.addEventListener("change", function (e) {
+    // item.addEventListener("click", function (e) {
     //   e.preventDefault();
-
-    //   let num = Number(e.target.getAttribute("value"));
-    //   cartEditItemInit(cartId[index], num);
+    //   minusBtn.forEach(function (item) {
+    //     console.log(item);
+    //     cartProductNum.forEach(function (key) {
+    //       num = Number(key.value) - 1;
+    //       key.value = num;
+    //     });
+    //   });
+    //   if (e.target.getAttribute("class") === "minusBtn") {
+    //   }
     // });
+
+    item.addEventListener("change", function (e) {
+      e.preventDefault();
+      cartProductNum.forEach(function (key, index) {
+        let num = Number(key.value);
+        cartEditItemInit(cartId[index], num);
+      });
+    });
   });
 }
 //刪除單筆購物車

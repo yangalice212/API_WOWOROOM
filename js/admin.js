@@ -52,9 +52,9 @@ function chartProductInit() {
   orderListData.forEach(function (item) {
     item.products.forEach(function (key) {
       if (obj[key.title] === undefined) {
-        obj[key.title] = 1;
+        obj[key.title] = key.quantity;
       } else {
-        obj[key.title] += 1;
+        obj[key.title] += key.quantity;
       }
     });
   });
