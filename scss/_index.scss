@@ -3,8 +3,10 @@
   margin: 0 auto;
   padding: 0 15px;
 }
-
-.navbar {
+h3 {
+  margin-bottom: 32px;
+}
+.navbarList {
   border-bottom: 40px solid black;
   margin-bottom: 30px;
   position: relative;
@@ -21,7 +23,7 @@
   h1 {
     font-weight: bold;
   }
-  &-menu {
+  .navbarMenu {
     margin-left: auto;
     flex-wrap: wrap;
     background: white;
@@ -51,7 +53,7 @@
       max-height: 300px;
     }
   }
-  &-toggle {
+  .navbarToggle {
     display: none;
     border: none;
     background: transparent;
@@ -134,7 +136,6 @@
   }
   h3 {
     color: white;
-    margin-bottom: 32px;
   }
   &-top {
     margin-left: 95px;
@@ -223,6 +224,23 @@
       position: relative;
       width: 23.5%;
       margin-bottom: 28px;
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(3),
+      &:nth-child(5),
+      &:nth-child(6),
+      &:nth-child(7) {
+        margin-right: 19px;
+        @include pc {
+          margin-right: 16px;
+        }
+        @include pad {
+          margin-right: 9px;
+        }
+        @include sm-phone {
+          margin-right: 0px;
+        }
+      }
       img {
         width: 100%;
       }
@@ -235,12 +253,7 @@
         padding: 8px 24px;
       }
       a {
-        background: #000;
-        color: white;
         padding: 10px 0;
-        &:hover {
-          background: #301e5f;
-        }
       }
       @include pad {
         width: 48.5%;
@@ -259,9 +272,6 @@
     margin: 0 auto;
     overflow-x: scroll;
   }
-  h3 {
-    margin-bottom: 32px;
-  }
   table {
     width: 920px;
     margin: 0 auto;
@@ -279,6 +289,9 @@
       width: 80px;
       height: 80px;
       margin-right: 15px;
+      @include pad {
+        display: none;
+      }
     }
     tbody tr {
       border-bottom: 1px solid #bfbfbf;
@@ -298,11 +311,26 @@
     tfoot a {
       width: 160px;
       padding: 8px 0;
-      color: black;
-      border: 1px solid black;
+    }
+  }
+  &Num {
+    display: flex;
+    input,
+    button {
+      margin: 0;
+    }
+    input {
+      width: 40px;
+      text-align: center;
+    }
+    .cartBtn {
+      padding: 7px 10px;
+      border: 1px solid lightgray;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
       &:hover {
-        background: black;
-        color: white;
+        background: lightgray;
       }
     }
   }
@@ -310,9 +338,6 @@
 
 .customerForm {
   padding: 60px 0 80px;
-  h3 {
-    margin-bottom: 32px;
-  }
   form {
     margin: 0 auto;
     width: 350px;
@@ -331,17 +356,21 @@
       border: 1px solid #ced4da;
       border-radius: 4px;
     }
-  }
-  .sendCustomerFormBtn {
-    border: 0;
-    border-radius: 4px;
-    background: #000;
-    color: white;
-    padding: 10px 68px;
-    text-align: center;
-    cursor: pointer;
-    &:hover {
-      background: #301e5f;
+    p {
+      color: red;
     }
   }
+  .customerFormBtn {
+    border: 0;
+    border-radius: 4px;
+    padding: 10px 68px;
+    cursor: pointer;
+  }
+}
+.gotop {
+  position: fixed;
+  z-index: 9;
+  font-size: 35px;
+  right: 20px;
+  bottom: 20px;
 }

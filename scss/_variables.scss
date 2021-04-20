@@ -13,6 +13,9 @@ $other: #797979;
 .jc-center {
   justify-content: center;
 }
+.jc-end {
+  justify-content: flex-end;
+}
 //font
 
 .fs-1 {
@@ -36,4 +39,21 @@ $other: #797979;
 }
 .text-right {
   text-align: right;
+}
+
+//btm
+.btn-purple {
+  background: #000;
+  color: white;
+  &:hover {
+    background: #301e5f;
+  }
+}
+.btn-black {
+  color: black;
+  border: 1px solid black;
+  &:hover {
+    background: black;
+    color: white;
+  }
 }

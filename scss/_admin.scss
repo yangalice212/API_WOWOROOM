@@ -1,0 +1,56 @@
+.chartSection {
+  margin-bottom: 60px;
+  text-align: center;
+  h2 {
+    margin-bottom: 70px;
+  }
+  text {
+    color: white;
+  }
+}
+.order {
+  .delAllOrderBtn {
+    padding: 10px 20px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  &-table {
+    max-width: 1110px;
+    overflow-x: scroll;
+  }
+  table {
+    width: 1110px;
+    text-align: left;
+    th,
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid black;
+    }
+    a {
+      color: #0067ce;
+    }
+    .delOrderItemBtn {
+      display: inline-block;
+      background: #c44021;
+      color: white;
+      border: 0;
+      padding: 3px 5px;
+      &:hover {
+        background: #ac3217;
+      }
+    }
+  }
+}
+.modal {
+  thead,
+  .bodyItem {
+    th,
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid black;
+    }
+  }
+  td {
+    padding: 12px 16px;
+  }
+}
