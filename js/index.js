@@ -1,3 +1,4 @@
+const api_url = "https://livejs-api.hexschool.io";
 const api_path = "yangalice212";
 let productListData;
 let cartListData;
@@ -51,7 +52,7 @@ function init() {
 function productListInit() {
   axios
     .get(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/products`
+      `${api_url}/api/livejs/v1/customer/${api_path}/products`
     )
     .then(function (response) {
       productListData = response.data.products;
@@ -79,14 +80,14 @@ function showProdcutList() {
 }
 function showProductListItem(item) {
   let str = `
-        <li class="fs-1" data-id="${item.id}">
-          <h5>新品</h5>
-          <img src="${item.images}" alt="">
-          <a href="#" class="addCartBtn text-center btn-purple">加入購物車</a>
-          <h4>${item.title}</h4>
-          <del>NT$${toThousands(item.origin_price)}</del>
-          <p class="fs-3">NT$${toThousands(item.price)}</p>
-        </li>
+    <li class="fs-1" data-id="${item.id}">
+      <h5>新品</h5>
+      <img src="${item.images}" alt="">
+      <a href="#" class="addCartBtn text-center btn-purple">加入購物車</a>
+      <h4>${item.title}</h4>
+      <del>NT$${toThousands(item.origin_price)}</del>
+      <p class="fs-3">NT$${toThousands(item.price)}</p>
+    </li>
   `;
   return str;
 }
@@ -106,7 +107,7 @@ function productFilter() {
 function cartListInit() {
   axios
     .get(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/carts`
+      `${api_url}/api/livejs/v1/customer/${api_path}/carts`
     )
     .then(function (response) {
       cartListData = response.data.carts;
@@ -121,54 +122,54 @@ function showCartList() {
     cartList.innerHTML = str;
   } else {
     str = `
-        <thead>
-          <th width="50%">品項</th>
-          <th width="20%">單價</th>
-          <th width="20%">數量</th>
-          <th width="10%">金額</th>
-          <th></th>
-        </thead>
-        <tbody>
+      <thead>
+        <th width="50%">品項</th>
+        <th width="20%">單價</th>
+        <th width="20%">數量</th>
+        <th width="10%">金額</th>
+        <th></th>
+      </thead>
+      <tbody>
     `;
     cartListData.forEach(function (item) {
       str += `
-          <tr>
-            <td class="d-flex ai-center">
-              <img src="${item.product.images}" alt="">
-              <h4>${item.product.title}</h4>
-            </td>
-            <td>NT$${toThousands(item.product.price)}</td>
-            <td>
-              <div class="cartNum">
-                <button class="minusBtn">-</button>
-                <input type="text" value="${
-                  item.quantity
-                }" class="cartProductNum">
-                <button class="plusBtn">+</button>
-              </div>
-            </td>
-            <td class="text-right">NT$${toThousands(
-              item.product.price * item.quantity
-            )}</td>
-            <td class="text-right"><a href="#" class="delCartItem"><i class="fas fa-times fa-2x"></i></a></td>
-          </tr>
+        <tr>
+          <td class="d-flex ai-center">
+            <img src="${item.product.images}" alt="">
+            <h4>${item.product.title}</h4>
+          </td>
+          <td>NT$${toThousands(item.product.price)}</td>
+          <td>
+            <div class="cartNum">
+              <button class="minusBtn">-</button>
+              <input type="text" value="${
+                item.quantity
+              }" class="cartProductNum">
+              <button class="plusBtn">+</button>
+            </div>
+          </td>
+          <td class="text-right">NT$${toThousands(
+            item.product.price * item.quantity
+          )}</td>
+          <td class="text-right"><a href="#" class="delCartItem"><i class="fas fa-times fa-2x"></i></a></td>
+        </tr>
       `;
       cartId.push(item.id);
       totalPrice += item.product.price * item.quantity;
     });
     str += `
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3">
-              <a href="#" class="cartDelAll text-center btn-black">刪除所有品項</a>
-            </td>
-            <td>
-              總金額
-            </td>
-            <td class="fs-3">NT$${toThousands(totalPrice)}</td>
-          </tr>
-        </tfoot>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <a href="#" class="cartDelAll text-center btn-black">刪除所有品項</a>
+          </td>
+          <td>
+            總金額
+          </td>
+          <td class="fs-3">NT$${toThousands(totalPrice)}</td>
+        </tr>
+      </tfoot>
     `;
     cartList.innerHTML = str;
     //修改購物車數量
@@ -187,7 +188,7 @@ function showCartList() {
 function cartAddItemInit(id) {
   axios
     .post(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/carts`,
+      `${api_url}/api/livejs/v1/customer/${api_path}/carts`,
       {
         data: {
           productId: id,
@@ -203,7 +204,7 @@ function cartAddItemInit(id) {
 function cartEditItemInit(id, num) {
   axios
     .patch(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/carts`,
+      `${api_url}/api/livejs/v1/customer/${api_path}/carts`,
       {
         data: {
           id: id,
@@ -252,7 +253,7 @@ function cartEditItem(arr) {
 function cartDelItemInit(cart_id) {
   axios
     .delete(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/carts/${cart_id}`
+      `${api_url}/api/livejs/v1/customer/${api_path}/carts/${cart_id}`
     )
     .then(function () {
       cartListInit();
@@ -289,7 +290,7 @@ function cartDelItem(arr) {
 function cartDelAllItemInit() {
   axios
     .delete(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/carts`
+      `${api_url}/api/livejs/v1/customer/${api_path}/carts`
     )
     .then(function () {
       cartListInit();
@@ -324,7 +325,7 @@ function cartDelAllItem(arr) {
 function sendCustomerFormInit(info) {
   axios
     .post(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/orders`,
+      `${api_url}/api/livejs/v1/customer/${api_path}/orders`,
       {
         data: {
           user: {

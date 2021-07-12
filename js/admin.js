@@ -1,3 +1,4 @@
+const api_url = "https://livejs-api.hexschool.io";
 const api_path = "yangalice212";
 const token = "PZNUCKUUe5TOVVyLn3fhddf7WX92";
 let orderListData;
@@ -8,7 +9,6 @@ const orderDetailBody = document.querySelector(".orderDetailBody");
 function init() {
   orderListInit();
 }
-
 //chart.js - 產品類別
 function chartCategoryInit() {
   let obj = {};
@@ -113,7 +113,7 @@ function chartProductInit() {
 function orderListInit() {
   axios
     .get(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders`,
+      `${api_url}/api/livejs/v1/admin/${api_path}/orders`,
       {
         headers: {
           Authorization: token,
@@ -139,16 +139,16 @@ function orderList() {
       isPaid = "已處理";
     }
     str += `
-          <tr>
-            <th>${item.createdAt}</th>
-            <td>${item.user.name}<br>${item.user.tel}</td>
-            <td>${item.user.address}</td>
-            <td>${item.user.email}</td>
-            <td><a href="#" class="orderDetail" data-bs-toggle="modal" data-bs-target="#orderDetailModal">訂單詳情</a></td>
-            <td>${todayDate()}</td>
-            <td><a href="#" class="isPaidBtn">${isPaid}</a></td>
-            <td><a href="#" class="delOrderItemBtn">刪除</a></td>
-          </tr>
+      <tr>
+        <th>${item.createdAt}</th>
+        <td>${item.user.name}<br>${item.user.tel}</td>
+        <td>${item.user.address}</td>
+        <td>${item.user.email}</td>
+        <td><a href="#" class="orderDetail" data-bs-toggle="modal" data-bs-target="#orderDetailModal">訂單詳情</a></td>
+        <td>${todayDate()}</td>
+        <td><a href="#" class="isPaidBtn">${isPaid}</a></td>
+        <td><a href="#" class="delOrderItemBtn">刪除</a></td>
+      </tr>
     `;
     orderIdArr.push(item.id);
     productList.push(item.products);
@@ -175,22 +175,22 @@ function orderProdcutList(arr) {
   let orderTotalPrice = 0;
   arr.forEach(function (item) {
     str += `
-            <tr class="bodyItem">
-              <td>${item.title}</td>
-              <td>${item.quantity}</td>
-              <td class="text-right">NT $${toThousands(item.price)}</td>
-            </tr>
+      <tr class="bodyItem">
+        <td>${item.title}</td>
+        <td>${item.quantity}</td>
+        <td class="text-right">NT $${toThousands(item.price)}</td>
+      </tr>
   `;
     orderTotalPrice += item.price;
   });
   str += `
-            <tr>
-              <td></td>
-              <td>總金額</td>
-              <td class="text-right orderTotalPrice">NT $${toThousands(
-                orderTotalPrice
-              )}</td>
-            </tr>
+    <tr>
+      <td></td>
+      <td>總金額</td>
+      <td class="text-right orderTotalPrice">NT $${toThousands(
+        orderTotalPrice
+      )}</td>
+    </tr>
   `;
   orderDetailBody.innerHTML = str;
 }
@@ -205,7 +205,7 @@ function todayDate() {
 function editOrderListInit(orderId) {
   axios
     .put(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders`,
+      `${api_url}/api/livejs/v1/admin/${api_path}/orders`,
       {
         data: {
           id: orderId,
@@ -220,6 +220,9 @@ function editOrderListInit(orderId) {
     )
     .then(function (res) {
       orderListInit();
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function editOrderList(arr) {
@@ -234,7 +237,7 @@ function editOrderList(arr) {
 function delAllOrderInit() {
   axios
     .delete(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders`,
+      `${api_url}/api/livejs/v1/admin/${api_path}/orders`,
       {
         headers: {
           Authorization: token,
@@ -244,6 +247,9 @@ function delAllOrderInit() {
     .then(function () {
       orderListInit();
       swal("已刪除全部訂單", "", "success");
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function delAllOrder() {
@@ -276,7 +282,7 @@ function delAllOrder() {
 function delOrderItemInit(orderId) {
   axios
     .delete(
-      `https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders/${orderId}`,
+      `${api_url}/api/livejs/v1/admin/${api_path}/orders/${orderId}`,
       {
         headers: {
           Authorization: token,
@@ -286,6 +292,9 @@ function delOrderItemInit(orderId) {
     .then(function () {
       orderListInit();
       swal("已刪除訂單", "", "success");
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function delOrderItem(arr) {
