@@ -31,12 +31,11 @@
     }
     .delOrderItemBtn {
       display: inline-block;
-      background: #c44021;
-      color: white;
+      color: lightgray;
       border: 0;
       padding: 3px 5px;
       &:hover {
-        background: #ac3217;
+        color: gray;
       }
     }
   }

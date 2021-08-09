@@ -1,5 +1,5 @@
-const api_url = "https://livejs-api.hexschool.io";
-const api_path = "yangalice212";
+const apiUrl = "https://livejs-api.hexschool.io";
+const apiPath = "yangalice212";
 let productListData;
 let cartListData;
 let cartId = [];
@@ -11,22 +11,30 @@ const customerFormBtn = document.querySelector(".customerFormBtn");
 const customerFormInput = document.querySelectorAll(
   "input[type=text],input[type=tel],input[type=email],.form-group select"
 );
+const loader = document.querySelector(".loader");
 const constraints = {
   nameInput: {
     presence: {
+      allowEmpty: false,
       message: "必填",
     },
   },
   phoneInput: {
     presence: {
+      allowEmpty: false,
       message: "必填",
     },
     numericality: {
       message: "請輸入數字格式",
     },
+    length: {
+      minimum: 8,
+      message: "不可少於 8 碼",
+    },
   },
   emailInput: {
     presence: {
+      allowEmpty: false,
       message: "必填",
     },
     email: {
@@ -35,11 +43,13 @@ const constraints = {
   },
   addressInput: {
     presence: {
+      allowEmpty: false,
       message: "必填",
     },
   },
   payInput: {
     presence: {
+      allowEmpty: false,
       message: "必填",
     },
   },
@@ -51,14 +61,15 @@ function init() {
 //產品列表
 function productListInit() {
   axios
-    .get(
-      `${api_url}/api/livejs/v1/customer/${api_path}/products`
-    )
-    .then(function (response) {
-      productListData = response.data.products;
+    .get(`${apiUrl}/api/livejs/v1/customer/${apiPath}/products`)
+    .then((res) => {
+      productListData = res.data.products;
       showProdcutList();
       //篩選
       filter.addEventListener("change", productFilter);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function showProdcutList() {
@@ -106,12 +117,13 @@ function productFilter() {
 //購物車列表
 function cartListInit() {
   axios
-    .get(
-      `${api_url}/api/livejs/v1/customer/${api_path}/carts`
-    )
-    .then(function (response) {
-      cartListData = response.data.carts;
+    .get(`${apiUrl}/api/livejs/v1/customer/${apiPath}/carts`)
+    .then((res) => {
+      cartListData = res.data.carts;
       showCartList();
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function showCartList() {
@@ -187,33 +199,36 @@ function showCartList() {
 //新增項目至購物車
 function cartAddItemInit(id) {
   axios
-    .post(
-      `${api_url}/api/livejs/v1/customer/${api_path}/carts`,
-      {
-        data: {
-          productId: id,
-          quantity: 1,
-        },
-      }
-    )
-    .then(function () {
+    .post(`${apiUrl}/api/livejs/v1/customer/${apiPath}/carts`, {
+      data: {
+        productId: id,
+        quantity: 1,
+      },
+    })
+    .then(() => {
+      swal("已成功加入購物車", "", "success");
       cartListInit();
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 //修改購物車數量
 function cartEditItemInit(id, num) {
   axios
-    .patch(
-      `${api_url}/api/livejs/v1/customer/${api_path}/carts`,
-      {
-        data: {
-          id: id,
-          quantity: num,
-        },
+    .patch(`${apiUrl}/api/livejs/v1/customer/${apiPath}/carts`, {
+      data: {
+        id: id,
+        quantity: num,
+      },
+    })
+    .then((res) => {
+      if (res.data.status) {
+        swal("已成功修改產品數量", "", "success");
       }
-    )
-    .then(function (res) {
-      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function cartEditItem(arr) {
@@ -222,28 +237,34 @@ function cartEditItem(arr) {
   const cartProductNum = document.querySelectorAll(".cartProductNum");
   arr.forEach(function (item, index) {
     let num = 0;
-    minusBtn.forEach(function (item, index) {
-      item.addEventListener("click", function (e) {
-        console.log(item);
-      });
+    minusBtn[index].addEventListener("click", function (e) {
+      num = Number(cartProductNum[index].value);
+      num -= 1;
+      cartProductNum[index].value = num;
+      if (num <= 0) {
+        swal("購物車數量不可小於1", "", "error");
+        num = 1;
+        cartProductNum[index].value = num;
+        return;
+      }
+      cartEditItemInit(cartId[index], num);
     });
-    // item.addEventListener("click", function (e) {
-    //   e.preventDefault();
-    //   minusBtn.forEach(function (item) {
-    //     console.log(item);
-    //     cartProductNum.forEach(function (key) {
-    //       num = Number(key.value) - 1;
-    //       key.value = num;
-    //     });
-    //   });
-    //   if (e.target.getAttribute("class") === "minusBtn") {
-    //   }
-    // });
-
+    plusBtn[index].addEventListener("click", function (e) {
+      num = Number(cartProductNum[index].value);
+      num += 1;
+      cartProductNum[index].value = num;
+      cartEditItemInit(cartId[index], num);
+    });
     item.addEventListener("change", function (e) {
       e.preventDefault();
       cartProductNum.forEach(function (key, index) {
         let num = Number(key.value);
+        if (num <= 0) {
+          swal("購物車數量不可小於1", "", "error");
+          num = 1;
+          cartProductNum[index].value = num;
+          return;
+        }
         cartEditItemInit(cartId[index], num);
       });
     });
@@ -252,11 +273,12 @@ function cartEditItem(arr) {
 //刪除單筆購物車
 function cartDelItemInit(cart_id) {
   axios
-    .delete(
-      `${api_url}/api/livejs/v1/customer/${api_path}/carts/${cart_id}`
-    )
-    .then(function () {
+    .delete(`${apiUrl}/api/livejs/v1/customer/${apiPath}/carts/${cart_id}`)
+    .then(() => {
       cartListInit();
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function cartDelItem(arr) {
@@ -289,11 +311,12 @@ function cartDelItem(arr) {
 //刪除所有購物車
 function cartDelAllItemInit() {
   axios
-    .delete(
-      `${api_url}/api/livejs/v1/customer/${api_path}/carts`
-    )
-    .then(function () {
+    .delete(`${apiUrl}/api/livejs/v1/customer/${apiPath}/carts`)
+    .then(() => {
       cartListInit();
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 function cartDelAllItem(arr) {
@@ -324,63 +347,50 @@ function cartDelAllItem(arr) {
 //送出預定資料
 function sendCustomerFormInit(info) {
   axios
-    .post(
-      `${api_url}/api/livejs/v1/customer/${api_path}/orders`,
-      {
-        data: {
-          user: {
-            name: info[0],
-            tel: info[1],
-            email: info[2],
-            address: info[3],
-            payment: info[4],
-          },
+    .post(`${apiUrl}/api/livejs/v1/customer/${apiPath}/orders`, {
+      data: {
+        user: {
+          name: info[0],
+          tel: info[1],
+          email: info[2],
+          address: info[3],
+          payment: info[4],
         },
+      },
+    })
+    .then((res) => {
+      if (res.data.status) {
+        customerFormInput.forEach((i) => {
+          i.value = "";
+        });
+        swal("已成功送出訂單", "", "success");
+        cartListInit();
       }
-    )
-    .then(function () {
-      customerFormInput.forEach((i) => {
-        i.value = "";
-      });
-      cartListInit();
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 //驗證顧客表單資訊 - input change 就觸發
 function changeCustomerFormCheck() {
-  customerFormInput.forEach(function (item) {
+  customerFormInput.forEach((item) => {
     item.addEventListener("change", function () {
       item.nextElementSibling.textContent = "";
-      let errors = validate(customerForm, constraints);
-      if (errors) {
-        let arr = Object.keys(errors);
-        arr.forEach(function (key) {
-          document.querySelector(`p.${key}`).textContent = errors[key];
-        });
-      }
+      formCheck();
     });
   });
 }
 //驗證顧客表單資訊 - 按下送出按鈕觸發
+let check = false;
 function sendCustomerFormCheck() {
-  let check = false;
   if (cartListData.length === 0) {
-    check = false;
     swal("購物車裡沒東西哦", "", "warning");
+    return;
   }
-  customerFormInput.forEach((i) => {
-    let errors = validate(customerForm, constraints);
-    if (errors) {
-      let arr = Object.keys(errors);
-      arr.forEach(function (key) {
-        document.querySelector(`p.${key}`).textContent = errors[key];
-      });
-      check = false;
-    } else {
-      check = true;
-    }
+  customerFormInput.forEach(() => {
+    formCheck();
     changeCustomerFormCheck();
   });
-
   if (check) {
     let info = [
       document.querySelector(".nameInput").value,
@@ -390,6 +400,31 @@ function sendCustomerFormCheck() {
       document.querySelector(".payInput").value,
     ];
     sendCustomerFormInit(info);
+  }
+}
+
+function formCheck() {
+  let errors = validate(customerForm, constraints);
+  if (errors) {
+    let arr = Object.keys(errors);
+    let item = "";
+    arr.forEach((key) => {
+      item = document.querySelector(`p.${key}`);
+      if (item.className === "nameInput") {
+        item.textContent = "姓名為必填";
+      } else if (item.className === "phoneInput") {
+        item.textContent = "電話為必填";
+      } else if (item.className === "emailInput") {
+        item.textContent = "Email 為必填";
+      } else if (item.className === "addressInput") {
+        item.textContent = "地址為必填";
+      } else if (item.className === "payInput") {
+        item.textContent = "交易方式為必填";
+      }
+    });
+    check = false;
+  } else {
+    check = true;
   }
 }
 

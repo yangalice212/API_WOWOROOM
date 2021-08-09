@@ -6,39 +6,40 @@ let orderIdArr = [];
 const delAllOrderBtn = document.querySelector(".delAllOrderBtn");
 const orderTable = document.querySelector(".order-table-body");
 const orderDetailBody = document.querySelector(".orderDetailBody");
+let colors = ["#5434A7", "#DACBFF", "#9D7FEA", "#5434A7"];
+let colorObj = {};
 function init() {
   orderListInit();
 }
 //chart.js - 產品類別
 function chartCategoryInit() {
   let obj = {};
-  orderListData.forEach(function (item) {
-    item.products.forEach(function (key) {
+  orderListData.forEach((item) => {
+    item.products.forEach((key) => {
       if (obj[key.category] === undefined) {
-        obj[key.category] = 1;
+        obj[key.category] = key.price;
       } else {
-        obj[key.category] += 1;
+        obj[key.category] += key.price;
       }
     });
   });
   let productNamArr = Object.keys(obj);
   let finalData = [];
-  productNamArr.forEach(function (item) {
+  productNamArr.forEach((item) => {
     let arr = [];
     arr.push(item);
     arr.push(obj[item]);
     finalData.push(arr);
+  });
+  finalData.forEach((item, index) => {
+    colorObj[item[0]] = colors[index];
   });
   let chart = c3.generate({
     bindto: ".chartCategory", // HTML 元素綁定
     data: {
       columns: finalData, // 資料存放
       type: "pie", // 圖表種類
-      colors: {
-        窗簾: "#5434A7",
-        床架: "#DACBFF",
-        收納: "#9D7FEA",
-      },
+      colors: colorObj,
     },
     size: {
       width: 350,
@@ -49,25 +50,24 @@ function chartCategoryInit() {
 //chart.js 產品品項
 function chartProductInit() {
   let obj = {};
-  orderListData.forEach(function (item) {
-    item.products.forEach(function (key) {
+  orderListData.forEach((item) => {
+    item.products.forEach((key) => {
       if (obj[key.title] === undefined) {
-        obj[key.title] = key.quantity;
+        obj[key.title] = key.price;
       } else {
-        obj[key.title] += key.quantity;
+        obj[key.title] += key.price;
       }
     });
   });
   let productNamArr = Object.keys(obj);
   let data = [];
-
-  productNamArr.forEach(function (item) {
+  productNamArr.forEach((item) => {
     let arr = [];
     arr.push(item);
     arr.push(obj[item]);
     data.push(arr);
   });
-  data.sort(function (a, b) {
+  data.sort((a, b) => {
     if (a[1] > b[1]) {
       return -1;
     } else if (a[1] < b[1]) {
@@ -78,30 +78,25 @@ function chartProductInit() {
   });
   let finalData = [];
   let otherNum = 0;
-  data.forEach(function (item) {
+  data.forEach((item, index) => {
     otherNum += item[1];
     if (finalData.length < 3) {
       finalData.push(item);
       otherNum -= item[1];
     }
   });
-  finalData.push(["其他", otherNum]);
+  if (finalData.length >= 3) {
+    finalData.push(["其他", otherNum]);
+  }
+  finalData.forEach((item, index) => {
+    colorObj[item[0]] = colors[index];
+  });
   let chart = c3.generate({
     bindto: ".chartTitle", // HTML 元素綁定
     data: {
       columns: finalData, // 資料存放
       type: "pie", // 圖表種類
-      colors: {
-        "Louvre 雙人床架／雙人加大": "#9D7FEA",
-        "Louvre 單人床架": "#DACBFF",
-        "Antony 雙人床架／雙人加大": "#6A33F8",
-        "Antony 遮光窗簾": "#301E5F",
-        "Charles 系列儲物組合": "#0067CE",
-        "Charles 雙人床架": "#4B0091",
-        "Jordan 雙人床架／雙人加大": "#5B00AE",
-        "Antony 床邊桌": "#CA8EFF",
-        其他: "#5434A7",
-      },
+      colors: colorObj,
     },
     size: {
       width: 350,
@@ -112,15 +107,12 @@ function chartProductInit() {
 //渲染訂單
 function orderListInit() {
   axios
-    .get(
-      `${api_url}/api/livejs/v1/admin/${api_path}/orders`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
-    .then(function (res) {
+    .get(`${api_url}/api/livejs/v1/admin/${api_path}/orders`, {
+      headers: {
+        Authorization: token,
+      },
+    })
+    .then((res) => {
       orderListData = res.data.orders;
       orderList();
       chartCategoryInit();
@@ -132,22 +124,22 @@ function orderList() {
   let isPaid = "";
   let productList = [];
   //渲染訂單
-  orderListData.forEach(function (item) {
-    if (item.paid === false) {
+  orderListData.forEach((item) => {
+    if (!item.paid) {
       isPaid = "未處理";
     } else {
       isPaid = "已處理";
     }
     str += `
       <tr>
-        <th>${item.createdAt}</th>
+        <th>${item.id}</th>
         <td>${item.user.name}<br>${item.user.tel}</td>
         <td>${item.user.address}</td>
         <td>${item.user.email}</td>
         <td><a href="#" class="orderDetail" data-bs-toggle="modal" data-bs-target="#orderDetailModal">訂單詳情</a></td>
-        <td>${todayDate()}</td>
+        <td>${new Date(item.createdAt * 1000).toISOString().split("T")[0]}</td>
         <td><a href="#" class="isPaidBtn">${isPaid}</a></td>
-        <td><a href="#" class="delOrderItemBtn">刪除</a></td>
+        <td><a href="#" class="delOrderItemBtn"><i class="fas fa-times fa-1x"></i></a></td>
       </tr>
     `;
     orderIdArr.push(item.id);
@@ -156,7 +148,7 @@ function orderList() {
   orderTable.innerHTML = str;
   //訂單產品列表
   const orderDetail = document.querySelectorAll(".orderDetail");
-  orderDetail.forEach(function (item, index) {
+  orderDetail.forEach((item, index) => {
     item.addEventListener("click", function (e) {
       e.preventDefault();
       orderProdcutList(productList[index]);
@@ -194,22 +186,15 @@ function orderProdcutList(arr) {
   `;
   orderDetailBody.innerHTML = str;
 }
-function todayDate() {
-  let td = new Date();
-  let year = td.getFullYear();
-  let month = td.getMonth() + 1;
-  let day = td.getDate();
-  return `${year}/${month}/${day}`;
-}
 //修改訂單API
-function editOrderListInit(orderId) {
+function editOrderListInit(orderId, isPaid) {
   axios
     .put(
       `${api_url}/api/livejs/v1/admin/${api_path}/orders`,
       {
         data: {
           id: orderId,
-          paid: true,
+          paid: isPaid,
         },
       },
       {
@@ -218,7 +203,8 @@ function editOrderListInit(orderId) {
         },
       }
     )
-    .then(function (res) {
+    .then((res) => {
+      swal("已成功修改訂單狀態", "", "success");
       orderListInit();
     })
     .catch((err) => {
@@ -229,21 +215,22 @@ function editOrderList(arr) {
   arr.forEach(function (item, index) {
     item.addEventListener("click", function (e) {
       e.preventDefault();
-      editOrderListInit(orderIdArr[index]);
+      if (item.textContent === "未處理") {
+        editOrderListInit(orderIdArr[index], true);
+      } else {
+        editOrderListInit(orderIdArr[index], false);
+      }
     });
   });
 }
 //刪除全部訂單API
 function delAllOrderInit() {
   axios
-    .delete(
-      `${api_url}/api/livejs/v1/admin/${api_path}/orders`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
+    .delete(`${api_url}/api/livejs/v1/admin/${api_path}/orders`, {
+      headers: {
+        Authorization: token,
+      },
+    })
     .then(function () {
       orderListInit();
       swal("已刪除全部訂單", "", "success");
@@ -271,24 +258,25 @@ function delAllOrder() {
         },
       },
       dangerMode: true,
-    }).then((value) => {
-      if (value === "delete") {
-        delAllOrderInit();
-      }
-    });
+    })
+      .then((value) => {
+        if (value === "delete") {
+          delAllOrderInit();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 //刪除單筆訂單API
 function delOrderItemInit(orderId) {
   axios
-    .delete(
-      `${api_url}/api/livejs/v1/admin/${api_path}/orders/${orderId}`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
+    .delete(`${api_url}/api/livejs/v1/admin/${api_path}/orders/${orderId}`, {
+      headers: {
+        Authorization: token,
+      },
+    })
     .then(function () {
       orderListInit();
       swal("已刪除訂單", "", "success");
@@ -298,7 +286,7 @@ function delOrderItemInit(orderId) {
     });
 }
 function delOrderItem(arr) {
-  arr.forEach(function (item, index) {
+  arr.forEach((item, index) => {
     item.addEventListener("click", function (e) {
       e.preventDefault();
       swal({
@@ -325,7 +313,5 @@ function delOrderItem(arr) {
   });
 }
 
-init();
-
 delAllOrderBtn.addEventListener("click", delAllOrder);
-todayDate();
+init();
